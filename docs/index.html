@@ -310,7 +310,83 @@ div.tocify {
 </div>
 
 
-
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>The accessibility of public education is always an important things for people. In New York state, there are 61 public universities or colleges for high education. However, when presenting them on the map, we found that in some areas, there a several clustered schools together, while in some other areas, the nearest university or college are too far away. This means that peopel living in some areas of New York state have an inaccessibity on high education. Lack of necessary will be a big social problem for local residents, and if the government have budget to build a new one, it will be important to cover those in need. Since it can be a p-median problem, we can use a package called tbart to solve such kind of location analysis problem.</p>
+</div>
+<div id="materials-and-methods" class="section level1">
+<h1>Materials and methods</h1>
+<div id="materials" class="section level2">
+<h2>Materials</h2>
+<p>There are two different kinds of data which is required in this project. The first one is the dataset of distribution of public universities and colleges. <a href="https://data.ny.gov/Education/City-University-of-New-York-CUNY-University-Campus/i5b5-imzn" class="uri">https://data.ny.gov/Education/City-University-of-New-York-CUNY-University-Campus/i5b5-imzn</a> Then I use Arcgis to do some work, make it into a shapefile.</p>
+<p>Another one is the basement map of New York State which contains population data of each county. <a href="https://gis.ny.gov/gisdata/inventories/details.cfm?DSID=1278" class="uri">https://gis.ny.gov/gisdata/inventories/details.cfm?DSID=1278</a></p>
+</div>
+<div id="methods" class="section level2">
+<h2>Methods</h2>
+<ul>
+<li>Using Arcgis to do geocoding work with New York State locator</li>
+<li>Visualizing the distribution of population in New York State</li>
+<li>Visualizing the distribution of public universities and colleges in New York State</li>
+<li>Using kriging to build a map in order to see if there are some areas lack of influences by public education</li>
+<li>Solve it as p-median problem, finding when we add the number of new schools, where will be the best choice</li>
+</ul>
+</div>
+<div id="data-preparation" class="section level2">
+<h2>Data preparation</h2>
+<p>Load any required packages in a code chunk (you may need to install some packages):</p>
+<pre class="r"><code>library(maptools)
+library(sf)
+library(ggplot2)
+library(dplyr)
+library(kriging)
+library(tbart)</code></pre>
+<pre class="r"><code># load data
+schools &lt;- sf::st_read (&#39;data/school.shp&#39;)</code></pre>
+<pre><code>## Reading layer `school&#39; from data source `C:\Users\wwd\Desktop\503\geo503-2018-finalproject-wwang52\data\school.shp&#39; using driver `ESRI Shapefile&#39;
+## Simple feature collection with 61 features and 34 fields
+## geometry type:  POINT
+## dimension:      XY
+## bbox:           xmin: 143482.7 ymin: 4500399 xmax: 664150.5 ymax: 4950470
+## epsg (SRID):    26918
+## proj4string:    +proj=utm +zone=18 +datum=NAD83 +units=m +no_defs</code></pre>
+<pre class="r"><code>counties &lt;- sf::st_read (&#39;data/Counties.shp&#39;)</code></pre>
+<pre><code>## Reading layer `Counties&#39; from data source `C:\Users\wwd\Desktop\503\geo503-2018-finalproject-wwang52\data\Counties.shp&#39; using driver `ESRI Shapefile&#39;
+## Simple feature collection with 62 features and 14 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 105570.3 ymin: 4480951 xmax: 779932.1 ymax: 4985476
+## epsg (SRID):    26918
+## proj4string:    +proj=utm +zone=18 +datum=NAD83 +units=m +no_defs</code></pre>
+<pre class="r"><code># data wrangling
+schools=schools%&gt;%mutate(total_students=Undergradu+Graduate_E)
+sf_population=st_as_sf(counties)
+sf_schools=st_as_sf(schools)</code></pre>
+</div>
+</div>
+<div id="results" class="section level1">
+<h1>Results</h1>
+<pre class="r"><code>#map of distribution of population
+sf_population%&gt;%ggplot()+
+  geom_sf(aes(geometry=geometry,fill=-log(POP2010,base=100)))+
+  scale_fill_viridis_c(name=&quot;-log100(population)&quot;)+
+  theme(legend.position = &#39;bottom&#39;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>#map of distribution of public universities and colleges
+ggplot()+
+  geom_sf(data=sf_population,aes(geometry=geometry,fill=-log(POP2010,base=100)))+
+  scale_fill_viridis_c(name=&quot;-log100(population)&quot;)+
+  geom_sf(data=sf_schools,aes(colour=&quot;a&quot;))+
+  scale_colour_manual(values=c(&quot;a&quot;=&quot;orange&quot;)) +
+  theme(legend.position = &#39;bottom&#39;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" width="672" /> (still on working~)</p>
+</div>
+<div id="conclusions" class="section level1">
+<h1>Conclusions</h1>
+<p>What have you learned? Are there any broader implications?</p>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+</div>
 
 <!-- give the footer some space -->
 <br/>

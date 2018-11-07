@@ -1,5 +1,83 @@
 ---
 title: "Higher Education in New York State"
-author: Wei Wang
+author: "Wei Wang"
 subtitle: Distribution of public universities
 ---
+# Introduction
+
+The accessibility of public education is always an important things for people. In New York state, there are 61 public universities or colleges for high education. However, when presenting them on the map, we found that in some areas, there a several clustered schools together, while in some other areas, the nearest university or college are too far away. This means that peopel living in some areas of New York state have an inaccessibity on high education. Lack of necessary will be a big social problem for local residents, and if the government have budget to build a new one, it will be important to cover those in need. Since it can be a p-median problem, we can use a package called tbart to solve such kind of location analysis problem.  
+
+
+# Materials and methods
+
+## Materials
+There are two different kinds of data which is required in this project. The first one is the dataset of distribution of public universities and colleges.
+https://data.ny.gov/Education/City-University-of-New-York-CUNY-University-Campus/i5b5-imzn
+Then I use Arcgis to do some work, make it into a shapefile.
+
+Another one is the basement map of New York State which contains population data of each county.
+https://gis.ny.gov/gisdata/inventories/details.cfm?DSID=1278
+
+## Methods
+
+* Using Arcgis to do geocoding work with New York State locator
+* Visualizing the distribution of population in New York State
+* Visualizing the distribution of public universities and colleges in New York State
+* Using kriging to build a map in order to see if there are some areas lack of influences by public education
+* Solve it as p-median problem, finding when we add the number of new schools, where will be the best choice
+
+## Data preparation
+Load any required packages in a code chunk (you may need to install some packages):
+
+```{r, message=F, warning=F}
+library(maptools)
+library(sf)
+library(ggplot2)
+library(dplyr)
+library(kriging)
+library(tbart)
+```
+
+```{r}
+# load data
+schools <- sf::st_read ('data/school.shp')
+counties <- sf::st_read ('data/Counties.shp')
+```
+
+```{r, warning=F} 
+# data wrangling
+schools=schools%>%mutate(total_students=Undergradu+Graduate_E)
+sf_population=st_as_sf(counties)
+sf_schools=st_as_sf(schools)
+```
+
+
+# Results
+
+```{r}
+#map of distribution of population
+sf_population%>%ggplot()+
+  geom_sf(aes(geometry=geometry,fill=-log(POP2010,base=100)))+
+  scale_fill_viridis_c(name="-log100(population)")+
+  theme(legend.position = 'bottom')
+```
+
+```{r}
+#map of distribution of public universities and colleges
+ggplot()+
+  geom_sf(data=sf_population,aes(geometry=geometry,fill=-log(POP2010,base=100)))+
+  scale_fill_viridis_c(name="-log100(population)")+
+  geom_sf(data=sf_schools,aes(colour="a"))+
+  scale_colour_manual(values=c("a"="orange")) +
+  theme(legend.position = 'bottom')
+```
+(still on working~)
+
+
+# Conclusions
+
+What have you learned?  Are there any broader implications?
+
+
+# References
+
