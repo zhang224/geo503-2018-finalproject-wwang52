@@ -73,7 +73,7 @@ ggplot()+
 
 # Conclusions
 
-What have you learned?  Are there any broader implications?
+
 
 
 # References
