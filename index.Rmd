@@ -34,7 +34,6 @@ library(maptools)
 library(sf)
 library(ggplot2)
 library(dplyr)
-library(kriging)
 library(tbart)
 ```
 
@@ -57,20 +56,18 @@ sf_schools=st_as_sf(schools)
 ```{r}
 #map of distribution of population
 sf_population%>%ggplot()+
-  geom_sf(aes(geometry=geometry,fill=-log(POP2010,base=100)))+
-  scale_fill_viridis_c(name="-log100(population)")+
+  geom_sf(aes(fill=-log2(POP2010)))+
   theme(legend.position = 'bottom')
 ```
 
 ```{r}
 #map of distribution of public universities and colleges
 ggplot()+
-  geom_sf(data=sf_population,aes(geometry=geometry,fill=-log(POP2010,base=100)))+
-  scale_fill_viridis_c(name="-log100(population)")+
-  geom_sf(data=sf_schools,aes(colour="a"))+
-  scale_colour_manual(values=c("a"="orange")) +
+  geom_sf(data=sf_population,aes(fill=-log2(POP2010)))+
+  geom_sf(data=sf_schools,aes(colour='pink'))+
   theme(legend.position = 'bottom')
 ```
+
 (still on working~)
 
 

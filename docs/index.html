@@ -338,11 +338,10 @@ div.tocify {
 library(sf)
 library(ggplot2)
 library(dplyr)
-library(kriging)
 library(tbart)</code></pre>
 <pre class="r"><code># load data
 schools &lt;- sf::st_read (&#39;data/school.shp&#39;)</code></pre>
-<pre><code>## Reading layer `school&#39; from data source `C:\Users\wwd\Desktop\503\geo503-2018-finalproject-wwang52\data\school.shp&#39; using driver `ESRI Shapefile&#39;
+<pre><code>## Reading layer `school&#39; from data source `C:\Users\wangw\Desktop\geo503-2018-finalproject-wwang52\data\school.shp&#39; using driver `ESRI Shapefile&#39;
 ## Simple feature collection with 61 features and 34 fields
 ## geometry type:  POINT
 ## dimension:      XY
@@ -350,7 +349,7 @@ schools &lt;- sf::st_read (&#39;data/school.shp&#39;)</code></pre>
 ## epsg (SRID):    26918
 ## proj4string:    +proj=utm +zone=18 +datum=NAD83 +units=m +no_defs</code></pre>
 <pre class="r"><code>counties &lt;- sf::st_read (&#39;data/Counties.shp&#39;)</code></pre>
-<pre><code>## Reading layer `Counties&#39; from data source `C:\Users\wwd\Desktop\503\geo503-2018-finalproject-wwang52\data\Counties.shp&#39; using driver `ESRI Shapefile&#39;
+<pre><code>## Reading layer `Counties&#39; from data source `C:\Users\wangw\Desktop\geo503-2018-finalproject-wwang52\data\Counties.shp&#39; using driver `ESRI Shapefile&#39;
 ## Simple feature collection with 62 features and 14 fields
 ## geometry type:  MULTIPOLYGON
 ## dimension:      XY
@@ -367,18 +366,16 @@ sf_schools=st_as_sf(schools)</code></pre>
 <h1>Results</h1>
 <pre class="r"><code>#map of distribution of population
 sf_population%&gt;%ggplot()+
-  geom_sf(aes(geometry=geometry,fill=-log(POP2010,base=100)))+
-  scale_fill_viridis_c(name=&quot;-log100(population)&quot;)+
+  geom_sf(aes(fill=-log2(POP2010)))+
   theme(legend.position = &#39;bottom&#39;)</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <pre class="r"><code>#map of distribution of public universities and colleges
 ggplot()+
-  geom_sf(data=sf_population,aes(geometry=geometry,fill=-log(POP2010,base=100)))+
-  scale_fill_viridis_c(name=&quot;-log100(population)&quot;)+
-  geom_sf(data=sf_schools,aes(colour=&quot;a&quot;))+
-  scale_colour_manual(values=c(&quot;a&quot;=&quot;orange&quot;)) +
+  geom_sf(data=sf_population,aes(fill=-log2(POP2010)))+
+  geom_sf(data=sf_schools,aes(colour=&#39;pink&#39;))+
   theme(legend.position = &#39;bottom&#39;)</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" width="672" /> (still on working~)</p>
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>(still on working~)</p>
 </div>
 <div id="conclusions" class="section level1">
 <h1>Conclusions</h1>
